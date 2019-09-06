@@ -5,6 +5,7 @@
 
 #define Password_Lenght 5 // Give enough room for six chars + NULL char
 #define Input_pin 7
+#define buzzer 6
 
 elapsedMillis timeElapsed; //declare global if you don't want it reset every time loop runs
 
@@ -14,7 +15,7 @@ char Master[Password_Lenght] = "1234";
 char Master2[Password_Lenght] = "0000"; 
 
 char Menu[Password_Lenght] = "8888";
-int entry_delay = 2000;
+int entry_delay = 5000;
 int exit_delay = 3000;
 byte data_count = 0, master_count = 0;
 bool Pass_is_good;
@@ -42,6 +43,8 @@ void setup()
 {
   lcd.begin(16, 2);
   pinMode(Input_pin,INPUT);
+   pinMode(buzzer,OUTPUT);
+   digitalWrite(buzzer,LOW);
 }
 
 void loop()
@@ -98,6 +101,7 @@ void arm()
     sprintf(Time,"%0.2d",T);
     lcd.setCursor(14,0);
     lcd.print(Time);
+    //buzzer_beep(1000,1);
     bool status = authentication();
     if (status)
     {
@@ -153,6 +157,7 @@ void checkAlarm()
     sprintf(Time,"%0.2d",T);
     lcd.setCursor(14,0);
     lcd.print(Time);
+    //buzzer_beep(500,2);
     bool status = authentication();
     if (status)
     {
@@ -212,4 +217,15 @@ bool authentication()
     return false;
   }
   
+}
+
+void buzzer_beep(int ms_delay,int count)
+{
+  for(int i=0;i<=count;i++)
+  {
+    digitalWrite(buzzer,HIGH);
+    delay(ms_delay);
+    digitalWrite(buzzer,LOW);
+    delay(ms_delay);
+  }
 }

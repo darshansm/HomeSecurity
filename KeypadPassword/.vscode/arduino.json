@@ -1,5 +1,5 @@
 {
     "board": "arduino:avr:uno",
     "sketch": "KeypadPassword.ino",
-    "output": "../ArduinoOutput"
+    "output": "C:/Users/darsh/Documents/Arduino"
 }
