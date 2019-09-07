@@ -15,8 +15,8 @@ char Master[Password_Lenght] = "1234";
 char Master2[Password_Lenght] = "0000"; 
 
 char Menu[Password_Lenght] = "8888";
-int entry_delay = 5000;
-int exit_delay = 3000;
+int entry_delay = 15000;
+int exit_delay = 5000;
 byte data_count = 0, master_count = 0;
 bool Pass_is_good;
 char customKey;
@@ -45,6 +45,7 @@ void setup()
   pinMode(Input_pin,INPUT);
    pinMode(buzzer,OUTPUT);
    digitalWrite(buzzer,LOW);
+   Serial.begin(9600);
 }
 
 void loop()
@@ -52,7 +53,7 @@ void loop()
   lcd.setCursor(0,0);
   lcd.print("Ready to Arm");
   disarm_flag = false;
-  getKey();
+  Key();
   if(data_count == Password_Lenght-1) // if the array index is equal to the number of expected chars, compare data to master
   {
     lcd.clear();
@@ -110,8 +111,9 @@ void arm()
       break;
     }
     else
-    {
-       exit_loop = true;
+    {   
+      exit_loop = true;
+      //break;
     }
   }
   lcd.clear();
@@ -188,7 +190,7 @@ void alarm()
   }
 }
 
-void getKey()
+void Key()
 {
   customKey = customKeypad.getKey();
   if (customKey) // makes sure a key is actually pressed, equal to (customKey != NO_KEY)
@@ -202,7 +204,7 @@ void getKey()
 
 bool authentication()
 {
-  getKey();
+  Key();
   if(!strcmp(Data, Master) || !strcmp(Data, Master2) ) // equal to (strcmp(Data, Master) == 0)
   {
       lcd.clear();
@@ -211,6 +213,16 @@ bool authentication()
       lcd.clear();
       clearData(); 
       return true;
+  } 
+  else if(data_count == (Password_Lenght - 1))
+  {
+    lcd.setCursor(0,1);
+    lcd.print("Access Denied");
+    delay(200);
+    lcd.setCursor(0,1);
+    lcd.print("                ");
+    clearData();
+    return false;
   }
   else
   {
