@@ -8,7 +8,7 @@
 #define buzzer 6
 int buzzerState = LOW;
 elapsedMillis timeElapsed; //declare global if you don't want it reset every time loop runs
-
+unsigned long previousMillis = 0;
 LiquidCrystal lcd(A0, A1, A2, A3, A4, A5);
 char Data[Password_Lenght]; // 6 is the number of chars it can hold + the null char = 7
 char Master[Password_Lenght] = "1234"; 
@@ -98,8 +98,7 @@ void arm()
   char Time[2];
   while (timeElapsed < exit_delay)
   {
-    int dly_on = 400;
-//int dly_off = 100;
+    int dly_on = 500;
     int cnt = 1;
     int T = (exit_delay - timeElapsed) / 1000;
     sprintf(Time,"%0.2d",T);
@@ -107,11 +106,9 @@ void arm()
     lcd.print(Time);
     if ( T < 10)
     {
-      dly_on = 125;
-      //dly_off = 100;
-      cnt = 2 ;
+      dly_on = 250;
     }
-    buzzer_beep(dly_on, cnt);
+    buzzer_beep(dly_on);
     bool status = authentication();
     if (status)
     {
@@ -165,8 +162,7 @@ void checkAlarm()
   timeElapsed = 0;
   while (timeElapsed < entry_delay)
   {
-    int dly_on = 400;
-    //int dly_off = 100;
+    int dly_on = 500;
     int cnt = 1;
     int T = (exit_delay - timeElapsed) / 1000;
     sprintf(Time,"%0.2d",T);
@@ -174,11 +170,9 @@ void checkAlarm()
     lcd.print(Time);
     if ( T < 10)
     {
-      dly_on = 125;
-      // dly_off = 100;
-      cnt = 2 ;
+      dly_on = 250;
     }
-    buzzer_beep(dly_on, cnt);
+    buzzer_beep(dly_on);
     bool status = authentication();
     if (status)
     {
@@ -253,9 +247,9 @@ bool authentication()
   
 }
 
-void buzzer_beep(int ms_delay, int count)
+void buzzer_beep(int ms_delay)
 {
-  unsigned long previousMillis = 0;
+
   unsigned long currentMillis = millis();
   if (currentMillis - previousMillis > ms_delay) {
     previousMillis = currentMillis;
